@@ -4,27 +4,31 @@ import { useGameContext } from '../context/GameContext';
 
 const GameStatus: React.FC = () => {
   const { gameState, resetGame } = useGameContext();
-  const { winner, currentPlayer, gameOver } = gameState;
+  const { winner, currentPlayer, gameOver, player1Name, player2Name } = gameState;
 
   const getStatusMessage = () => {
     if (winner === 'DRAW') {
       return "It's a draw!";
     } else if (winner) {
-      return `Player ${winner} wins!`;
+      const winnerName = winner === 'X' ? player1Name : player2Name;
+      return `${winnerName} wins!`;
     } else {
-      return `Player ${currentPlayer}'s turn`;
+      const currentPlayerName = currentPlayer === 'X' ? player1Name : player2Name;
+      return `${currentPlayerName}'s turn`;
     }
+  };
+
+  const getStatusColor = () => {
+    if (winner === 'DRAW') return 'text-purple-600';
+    if (winner === 'X' || currentPlayer === 'X') return 'text-blue-500';
+    if (winner === 'O' || currentPlayer === 'O') return 'text-teal-600';
+    return '';
   };
 
   return (
     <div className="text-center my-4">
       <motion.h2 
-        className={`text-2xl font-bold mb-4 ${
-          winner === 'X' ? 'text-blue-500' : 
-          winner === 'O' ? 'text-teal-600' : 
-          winner === 'DRAW' ? 'text-purple-600' : 
-          currentPlayer === 'X' ? 'text-blue-500' : 'text-teal-600'
-        }`}
+        className={`text-2xl font-bold mb-4 ${getStatusColor()}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         key={getStatusMessage()} // Re-animate when message changes
