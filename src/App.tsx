@@ -67,6 +67,18 @@ const Game: React.FC = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Error signing out:', error);
+      }
+      // onAuthStateChange will handle setting isAuthenticated to false
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex flex-col items-center justify-center p-4">
@@ -102,6 +114,16 @@ const Game: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex flex-col items-center justify-center p-4 relative">
+      {/* SIGN OUT BUTTON START */}
+      {isAuthenticated && (
+        <button
+          onClick={handleSignOut}
+          className="absolute top-4 right-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Sign Out
+        </button>
+      )}
+      {/* SIGN OUT BUTTON END */}
       <GameRules />
       
       <h1 className="text-3xl md:text-4xl font-bold text-purple-600 mb-6">
